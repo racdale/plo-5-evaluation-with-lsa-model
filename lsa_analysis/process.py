@@ -12,7 +12,7 @@ for i in range(1,995):
 	soup = BeautifulSoup(file_contents) # parse the HTML
 	if (len(soup.find('p',attrs={'id':'abstract'}))>0):
 		abstract = soup.find('p',attrs={'id':'abstract'}).contents[0].lower()
-		abstract = re.sub("\n","",abstract)
+		abstract = re.sub("\n"," ",abstract)
 		# beyond HTML entities using HTMLPareser; the encoding is readable by R
 		file("abstracts.txt","a").write(HTMLParser.HTMLParser().unescape(abstract).encode('utf8')+"\n")
 	else:

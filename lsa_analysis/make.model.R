@@ -10,7 +10,8 @@ cosine_similarity_matrix = function(ix) {
 # beautiful code to build dissimilarity matrix, using cos.sim above:
 # http://stats.stackexchange.com/questions/31565/is-there-an-r-function-that-will-compute-the-cosine-dissimilarity-matrix
 
-setwd('/Users/rickdale/Dropbox/duties/ucmservice/CISgradchair/SelfAssessments/2014/lsa_analysis')
+#setwd('/Users/rickdale/Dropbox/duties/ucmservice/CISgradchair/SelfAssessments/2014/lsa_analysis')
+setwd('/Users/rickdale/Sites/Dropbox/duties/ucmservice/CISgradchair/SelfAssessments/2014/lsa_analysis')
 a = read.table('abstracts.txt',sep='\n',quote = "")
 colnames(a) = list('abs')
 a$abs = as.character(a$abs)
@@ -63,21 +64,31 @@ X = S$u
 n = nrow(X)
 cmb = expand.grid(i=1:n, j=1:n) 
 allpairs = matrix(apply(cmb,1,cosine_similarity_matrix),n,n) # get all pairwise cosine similarity measures
-hist(allpairs[allpairs<1],100,main='Distribution of topical similarity at CogSci 2013',ylab='Density',xlab='Similarity score between a pair of abstracts (cosine)')
+hist(allpairs[allpairs<1 & upper.tri(allpairs)],100,main='Distribution of topical similarity at CogSci 2013',ylab='Density',xlab='Similarity score between a pair of abstracts (cosine)')
 
 # compare just the students
 cmb = expand.grid(i=studs, j=studs) 
 compare_studs = matrix(apply(cmb,1,cosine_similarity_matrix),length(studs),length(studs))
-compare_studs = compare_studs[compare_studs<1]
-points(mean(compare_studs),20000,pch=15)
-points(c(mean(compare_studs)-sd(compare_studs),mean(compare_studs)+sd(compare_studs)),c(20000,20000),type='l',lwd=2)
+compare_studs = compare_studs[compare_studs<1 & upper.tri(compare_studs)]
+points(mean(compare_studs),10000,pch=15)
+points(c(mean(compare_studs)-sd(compare_studs),mean(compare_studs)+sd(compare_studs)),c(10000,10000),type='l',lwd=2)
 
 # let's plot the range of the *maximal* fit
+maxs = c()
 for (i in studs) {
-  maxi = which.max(allpairs[i,])
-  ts[maxi]
+  maxi = which.max(allpairs[i,i != 1:n])
+  maxs = c(maxs,allpairs[i,maxi])  
 }
-
+points(mean(maxs),8000,pch=17)
+points(c(mean(maxs)-sd(maxs),mean(maxs)+sd(maxs)),c(8000,8000),type='l',lwd=2)
+# let's plot the range of the *minimal* fit
+mins = c()
+for (i in studs) {
+  mini = which.min(allpairs[i,i != 1:n])
+  mins = c(mins,allpairs[i,mini])  
+}
+points(mean(mins),8000,pch=17)
+points(c(mean(mins)-sd(mins),mean(mins)+sd(mins)),c(8000,8000),type='l',lwd=2)
 
 
 
