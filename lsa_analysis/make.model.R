@@ -73,7 +73,10 @@ points(mean(compare_studs),20000,pch=15)
 points(c(mean(compare_studs)-sd(compare_studs),mean(compare_studs)+sd(compare_studs)),c(20000,20000),type='l',lwd=2)
 
 # let's plot the range of the *maximal* fit
-
+for (i in studs) {
+  maxi = which.max(allpairs[i,])
+  ts[maxi]
+}
 
 
 
