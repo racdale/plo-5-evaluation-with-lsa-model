@@ -58,6 +58,8 @@ save(tXd.mat,tXd,file="tXd.Rdata")
 
 # tXd.mat too big for non-sparse SVD; use irlba
 S = irlba(tXd.mat,nu=15,nv=15) # very slow beyond 30 or so
+# future: should transform entries as described in Landauer & Dumais; 
+# small corpus, leaving as-is for now
 X = S$u
 
 # let's compare ALL PAIRS of abstracts
